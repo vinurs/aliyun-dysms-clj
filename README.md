@@ -1,10 +1,28 @@
-# aliyun-dysms-clj
-
-A Clojure library designed to ... well, that part is up to you.
+# aliyun-dysms-clj: 阿里云sms的Clojure封装
+* 发送短信
 
 ## Usage
+* project.clj & youns.clj
+```clojure
+;; project.clj
+[aliyun-dysms-clj "0.1.0"]
+;; your ns
+(ns test (:require [aliyun-dysms-clj.core :refer [send-sms]]))
+```
 
-FIXME
+* 发送短信
+```clojure
+(send-sms {:accessKeyId "xxxxxxxxxx"
+           :accessKeySecret "xxxxxxxxxxxxxxxxxxxx"
+           :TemplateCode "SMS_xxxxxxxx"
+           :TemplateParam "your template param"
+           :PhoneNumbers "your phoneNumbers"
+           :SignName "your signame"
+           :OutId "your outid”})
+```
+
+* 返回错误码
+参见[短信接口调用错误码](https://help.aliyun.com/knowledge_detail/57717.html?spm=a2c4g.11186623.2.9.VmRF7a)
 
 ## License
 
