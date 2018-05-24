@@ -21,7 +21,7 @@
 (defn send-sms
   [{:keys [accessKeyId accessKeySecret
            TemplateCode TemplateParam
-           PhoneNumber SignName OutId]}]
+           PhoneNumbers SignName OutId]}]
   (let [profile (DefaultProfile/getProfile
                    "cn-hangzhou"
                    accessKeyId
@@ -32,7 +32,7 @@
                        product domain)
                     (DefaultAcsClient. profile))
         request (doto (SendSmsRequest.)
-                  (.setPhoneNumbers PhoneNumber)
+                  (.setPhoneNumbers PhoneNumbers)
                   (.setSignName SignName)
                   (.setTemplateCode TemplateCode)
                   (.setTemplateParam TemplateParam)
