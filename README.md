@@ -5,16 +5,17 @@
 * project.clj & youns.clj
 ```clojure
 ;; project.clj
-[vinurs/aliyun-dysms-clj "0.1.1"]
+[vinurs/aliyun-dysms-clj "0.1.2"]
 ;; your ns
 (ns test (:require [aliyun-dysms-clj.core :refer [send-sms]]))
 ```
 
 * 发送短信
 ```clojure
-(send-sms {:accessKeyId "xxxxxxxxxx"
-           :accessKeySecret "xxxxxxxxxxxxxxxxxxxx"
-           :TemplateCode "SMS_xxxxxxxx"
+(aliyun-dysms-setconfig! {:access-key-id "xxxxxxx"
+                          :access-key-secret "xxxxxxxxxxx"})
+
+(send-sms {:TemplateCode "SMS_xxxxxxxx"
            :TemplateParam "your template param"
            :PhoneNumbers "your phoneNumbers"
            :SignName "your signame"

@@ -1,4 +1,4 @@
-(defproject vinurs/aliyun-dysms-clj "0.1.1"
+(defproject vinurs/aliyun-dysms-clj "0.1.2"
   :description "阿里云发送短信接口clojure封装"
   :url "https://github.com/vinurs/aliyun-dysms-clj"
   :license {:name "Eclipse Public License"
