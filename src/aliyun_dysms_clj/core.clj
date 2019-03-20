@@ -1,14 +1,13 @@
 (ns aliyun-dysms-clj.core
-  (:import (com.aliyuncs DefaultAcsClient IAcsClient)
-           (com.aliyuncs.dysmsapi.model.v20170525 QuerySendDetailsRequest
-                                                  QuerySendDetailsResponse
-                                                  SendSmsRequest
-                                                  SendSmsResponse)
-           (com.aliyuncs.dysmsapi.transform.v20170525.SendSmsResponseUnmarshaller)
+  (:require [cheshire.core :refer :all])
+  (:import (com.aliyuncs CommonRequest)
+           (com.aliyuncs CommonResponse)
+           (com.aliyuncs DefaultAcsClient)
+           (com.aliyuncs IAcsClient)
            (com.aliyuncs.exceptions ClientException)
-           (com.aliyuncs.http MethodType FormatType HttpResponse)
-           (com.aliyuncs.profile DefaultProfile IClientProfile)))
-
+           (com.aliyuncs.exceptions ServerException)
+           (com.aliyuncs.http MethodType)
+           (com.aliyuncs.profile DefaultProfile)))
 
 (def ^{:private true} sms-cfg
   "阿里云短信配置"
@@ -17,7 +16,7 @@
    ;; "短信API产品域名（接口地址固定，无需修改）"
    :domain "dysmsapi.aliyuncs.com"
    ;; 区域，目前支持这这个
-   :region "cn-hangzhou"
+   :region "default"
    :access-key-id "xxxxxxxx"
    :access-key-secret "xxxxxxxx"})
 
@@ -32,29 +31,31 @@
                   access-key-id access-key-secret))
 
 
-
 (defn send-sms
-  [{:keys [TemplateCode TemplateParam
+  [{:keys [TemplateCode TemplateParam SmsUpExtendCode
            PhoneNumbers SignName OutId]}]
   ;; 设置超时时间-可自行调整
   (let [profile (DefaultProfile/getProfile (:region sms-cfg)
                                            (:access-key-id sms-cfg)
                                            (:access-key-secret sms-cfg))
-        _ (DefaultProfile/addEndpoint (:region sms-cfg) (:region sms-cfg)
-                                      (:product sms-cfg) (:domain sms-cfg))
-        acsClient (DefaultAcsClient. profile)
+        client (DefaultAcsClient. profile)
         ;; 组装请求
-        request (doto (SendSmsRequest.)
-                  (.setPhoneNumbers PhoneNumbers)
-                  (.setSignName SignName)
-                  (.setTemplateCode TemplateCode)
-                  (.setTemplateParam TemplateParam)
-                  (.setOutId OutId))]
+        request (doto (CommonRequest.)
+                  (.setMethod MethodType/POST)
+                  (.setDomain (:domain sms-cfg))
+                  (.setVersion "2017-05-25")
+                  (.setAction "SendSms")
+                  (.putQueryParameter "PhoneNumbers" PhoneNumbers)
+                  (.putQueryParameter "SignName" SignName)
+                  (.putQueryParameter "TemplateCode" TemplateCode)
+                  (.putQueryParameter "TemplateParam" TemplateParam))]
     (try
-      (let [sendSmsResponse (.getAcsResponse acsClient request)
-            code (.getCode sendSmsResponse)]
+      (let [response (.getCommonResponse client request)
+            data (parse-string (.getData response) true)
+            code (:Code data)]
+        (println response data code)
         (if (= "OK" code)
           {:ok true :errmsg code}
           {:ok false :errmsg code}))
-      (catch Exception e {:ok false
-                          :errmsg (.getMessage e)}))))
+      (catch ServerException e {:ok false
+                                :errmsg (.getMessage e)}))))
