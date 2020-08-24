@@ -5,7 +5,7 @@
 * project.clj & youns.clj
 ```clojure
 ;; project.clj
-[vinurs/aliyun-dysms-clj "0.1.6"]
+[vinurs/aliyun-dysms-clj "0.1.9"]
 ;; your ns
 (ns test (:require [aliyun-dysms-clj.core :refer [send-sms]]))
 ```
@@ -27,7 +27,7 @@
 
 ## License
 
-Copyright © 2018 FIXME
+Copyright © 2020 FIXME
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
